@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Splatoon 戦績メモ</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  background: #111;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 { color: #00ffcc; }
+
+input, select, button {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  background: #00ffcc;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.card {
+  background: #222;
+  padding: 10px;
+  margin: 10px auto;
+  border-radius: 10px;
+  max-width: 400px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎮 Splatoon 戦績メモ</h1>
+
+<input id="kills" type="number" placeholder="キル">
+<input id="deaths" type="number" placeholder="デス">
+
+<select id="result">
+  <option value="win">勝ち</option>
+  <option value="lose">負け</option>
+</select>
+
+<button onclick="addMatch()">追加</button>
+
+<h2>📊 勝率</h2>
+<div id="stats"></div>
+
+<h2>📝 履歴</h2>
+<div id="list"></div>
+
+<script>
+let data = [];
+
+function addMatch() {
+  let k = Number(document.getElementById("kills").value);
+  let d = Number(document.getElementById("deaths").value);
+  let r = document.getElementById("result").value;
+
+  data.push({k, d, r});
+  render();
+}
+
+function render() {
+  let list = document.getElementById("list");
+  let stats = document.getElementById("stats");
+
+  list.innerHTML = "";
+
+  let win = 0;
+
+  data.forEach(m => {
+    if (m.r === "win") win++;
+
+    list.innerHTML += `
+      <div class="card">
+        キル:${m.k} / デス:${m.d} / ${m.r}
+      </div>
+    `;
+  });
+
+  let rate = data.length ? (win / data.length * 100).toFixed(1) : 0;
+
+  stats.innerHTML = `
+    総試合: ${data.length}<br>
+    勝ち: ${win}<br>
+    勝率: ${rate}%
+  `;
+}
+
+render();
+</script>
+
+</body>
+</html>
